@@ -3,6 +3,8 @@ package com.example.androwheather
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -19,8 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.androwheather.R
-import com.example.androwheather.ui.theme.Pink40
+import com.example.androwheather.ui.theme.Purple40
 
 @Preview(showBackground = true)
 @Composable
@@ -40,7 +41,8 @@ fun MainScreen() {
             .fillMaxSize()
             .padding(5.dp)
     ) {
-        Card(modifier = Modifier.fillMaxWidth())
+        Card(modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Purple40))
         {
             Column(
                 modifier = Modifier.fillMaxWidth(),
