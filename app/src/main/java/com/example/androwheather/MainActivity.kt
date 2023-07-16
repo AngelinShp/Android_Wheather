@@ -1,5 +1,6 @@
 package com.example.androwheather
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,13 +15,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 
+
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.android.volley.toolbox.Volley
 import com.example.androwheather.ui.theme.AppForWheatherTheme
-
+const val API_KEY = "9b29ac3510be8ad82ba5cacf1b2fe91e"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +37,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    Greeting("SPB", this)
                 }
             }
         }
@@ -39,7 +45,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
+fun Greeting(name: String, context: Context) {
+    val state = remember {
+        mutableStateOf("Unknown")
+    }
     Column(
         modifier = Modifier.fillMaxSize()
     )
@@ -50,7 +59,7 @@ fun Greeting(name: String) {
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Temperature in $name: 54 Cº")
+            Text(text = "Temperature in $name: ${state.value} Cº")
         }
         Box(
             modifier = Modifier
@@ -58,6 +67,7 @@ fun Greeting(name: String) {
             contentAlignment = Alignment.BottomCenter
         ) {
             Button(onClick = {
+
             }, modifier = Modifier.fillMaxWidth().padding(5.dp)) {
                 Text(text = "Refresh")
             }
@@ -71,7 +81,33 @@ fun Greeting(name: String) {
 @Composable
 fun GreetingPreview() {
     AppForWheatherTheme {
-        Greeting("Android")
+
     }
 }
 
+fun getData(name: String, context: Context, mState: MutableState<String>) {
+    val lot = 45
+    val lon = 54
+    val url = "api.openweathermap.org/data/2.5/forecast" +
+            "?lat=${lot}&" +
+            "lon=${lon}&" +
+            "appid=${API_KEY}"
+
+    val queue = Volley.newRequestQueue(context)
+    val stringRequest = StringRequest(
+        Request.Method.GET,
+        url,
+        {
+                response->
+            val obj = JSONObject(response)
+            val temp = obj.getJSONObject("current")
+            mState.value = temp.getString("temp_c")
+            Log.d("MyLog","Response: ${temp.getString("temp_c")}")
+        },
+        {
+            Log.d("MyLog","Volley error: $it")
+        }
+    )
+    queue.add(stringRequest)
+}
+}
