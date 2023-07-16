@@ -2,6 +2,7 @@ package com.example.androwheather
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -24,8 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.androwheather.ui.theme.AppForWheatherTheme
+import org.json.JSONObject
+
 const val API_KEY = "9b29ac3510be8ad82ba5cacf1b2fe91e"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +72,7 @@ fun Greeting(name: String, context: Context) {
             contentAlignment = Alignment.BottomCenter
         ) {
             Button(onClick = {
-
+                    getData(name, context, state)
             }, modifier = Modifier.fillMaxWidth().padding(5.dp)) {
                 Text(text = "Refresh")
             }
@@ -86,12 +91,10 @@ fun GreetingPreview() {
 }
 
 fun getData(name: String, context: Context, mState: MutableState<String>) {
-    val lot = 45
-    val lon = 54
-    val url = "api.openweathermap.org/data/2.5/forecast" +
-            "?lat=${lot}&" +
-            "lon=${lon}&" +
-            "appid=${API_KEY}"
+    val url = "https://api.weatherapi.com/v1/current.json" +
+            "?key=$API_KEY&" +
+            "q=$name" +
+            "&aqi=no"
 
     val queue = Volley.newRequestQueue(context)
     val stringRequest = StringRequest(
@@ -109,5 +112,4 @@ fun getData(name: String, context: Context, mState: MutableState<String>) {
         }
     )
     queue.add(stringRequest)
-}
 }
