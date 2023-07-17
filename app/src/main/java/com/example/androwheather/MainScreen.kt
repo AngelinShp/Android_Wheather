@@ -20,14 +20,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.androwheather.ui.theme.Purple40
+import com.example.androwheather.ui.theme.Blue
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun MainCard() {
     Image(
@@ -46,7 +46,7 @@ fun MainCard() {
             .padding(5.dp)
     ) {
         Card(modifier = Modifier.fillMaxWidth(),
-            backgroundColor = Purple40)
+            backgroundColor = Blue)
         {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -57,7 +57,7 @@ fun MainCard() {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "20 Jun 2022 13:00",
+                        text = "17.07.2023 22:52",
                         modifier = Modifier.padding(
                             top = 8.dp,
                             start = 8.dp
@@ -65,6 +65,7 @@ fun MainCard() {
                         style = TextStyle(fontSize = 15.sp),
                         color = Color.White
                     )
+
                     AsyncImage(
                         model = "https://cdn.weatherapi.com/weather/64x64/day/116.png",
                         contentDescription = "im2",
@@ -75,26 +76,6 @@ fun MainCard() {
                             )
                             .size(35.dp)
                     )
-                }
-                Text(
-                    text = "Madrid",
-                    style = TextStyle(fontSize = 24.sp),
-                    color = Color.White
-                )
-                Text(
-                    text = "23ºC",
-                    style = TextStyle(fontSize = 65.sp),
-                    color = Color.White
-                )
-                Text(
-                    text = "Sunny",
-                    style = TextStyle(fontSize = 16.sp),
-                    color = Color.White
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
                     IconButton(
                         onClick = {
 
@@ -106,12 +87,6 @@ fun MainCard() {
                             tint = Color.White
                         )
                     }
-
-                    Text(
-                        text = "23ºC/12ºC",
-                        style = TextStyle(fontSize = 16.sp),
-                        color = Color.White
-                    )
                     IconButton(
                         onClick = {
 
@@ -124,15 +99,36 @@ fun MainCard() {
                         )
                     }
                 }
-            }
+                Text(
+                    text = "СПб",
+                    style = TextStyle(fontSize = 24.sp),
+                    color = Color.White
+                )
+                Text(
+                    text = "30ºC",
+                    style = TextStyle(fontSize = 65.sp),
+                    color = Color.White
+                )
+                Text(
+                    text = "Солнечно",
+                    style = TextStyle(fontSize = 16.sp),
+                    color = Color.White
+                )
 
+                Text(
+                    text = "33ºC/-3ºC",
+                    style = TextStyle(fontSize = 16.sp),
+                    color = Color.White
+                )
+            }
         }
     }
 }
+@Preview
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TabLayout(){
-    val tabList = listOf("HOURS", "DAYS")
+    val tabList = listOf("По часам", "По дням")
     val pagerState = rememberPagerState()
     val tabIndex = pagerState.currentPage
     val coroutineScope = rememberCoroutineScope()
@@ -152,7 +148,7 @@ fun TabLayout(){
                     Modifier.pagerTabIndicatorOffset(pagerState, pos)
                 )
             },
-            backgroundColor = Purple40,
+            backgroundColor = Blue,
             contentColor = Color.White
         ) {
             tabList.forEachIndexed{index, text ->
