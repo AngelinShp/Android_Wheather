@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     contentScale = ContentScale.FillBounds
                 )
                 Column{
-                    MainScreen()
+                    MainCard()
                     TabLayout()
                 }
 

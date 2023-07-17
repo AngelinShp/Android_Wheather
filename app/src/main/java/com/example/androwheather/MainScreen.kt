@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
-fun MainScreen() {
+fun MainCard() {
     Image(
         painter = painterResource(
             id = R.drawable.background
