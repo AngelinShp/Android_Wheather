@@ -1,12 +1,16 @@
 package com.example.androwheather
 
+import android.provider.ContactsContract.Data
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.androwheather.dataclasses.DataModel
 import com.example.androwheather.ui.theme.Blue
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -27,19 +32,13 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
-//@Preview(showBackground = true)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainCard() {
-    Image(
-        painter = painterResource(
-            id = R.drawable.background
-        ),
-        contentDescription = "im1",
-        modifier = Modifier
-            .fillMaxSize()
-            .alpha(0.5f),
-        contentScale = ContentScale.FillBounds
-    )
+fun MainCard(dayslist: MutableState<List<DataModel>>,
+             currentDay: MutableState<DataModel>,
+             onClickSync: () -> Unit,
+             onClickSearch: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -57,7 +56,7 @@ fun MainCard() {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "17.07.2023 22:52",
+                        text = currentDay.value.time,
                         modifier = Modifier.padding(
                             top = 8.dp,
                             start = 8.dp
@@ -67,7 +66,7 @@ fun MainCard() {
                     )
 
                     AsyncImage(
-                        model = "https://cdn.weatherapi.com/weather/64x64/day/116.png",
+                        model = "https:" + currentDay.value.icon,
                         contentDescription = "im2",
                         modifier = Modifier
                             .padding(
@@ -78,7 +77,7 @@ fun MainCard() {
                     )
                     IconButton(
                         onClick = {
-
+                            onClickSearch.invoke()
                         }
                     ) {
                         Icon(
@@ -89,7 +88,7 @@ fun MainCard() {
                     }
                     IconButton(
                         onClick = {
-
+                            onClickSync.invoke()
                         }
                     ) {
                         Icon(
@@ -100,78 +99,88 @@ fun MainCard() {
                     }
                 }
                 Text(
-                    text = "СПб",
+                    text = currentDay.value.city,
                     style = TextStyle(fontSize = 24.sp),
                     color = Color.White
                 )
                 Text(
-                    text = "30ºC",
+                    text = if (currentDay.value.currentTemp.isNotEmpty())
+                        currentDay.value.currentTemp.toFloat().toInt().toString() + "ºC"
+                    else currentDay.value.maxTemp.toFloat().toInt().toString() +
+                            "ºC/${currentDay.value.minTemp.toFloat().toInt()}ºC",
                     style = TextStyle(fontSize = 65.sp),
                     color = Color.White
                 )
                 Text(
-                    text = "Солнечно",
+                    text = currentDay.value.condition,
                     style = TextStyle(fontSize = 16.sp),
                     color = Color.White
                 )
 
-                Text(
-                    text = "33ºC/-3ºC",
-                    style = TextStyle(fontSize = 16.sp),
-                    color = Color.White
-                )
-            }
-        }
-    }
-}
-@Preview
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun TabLayout(){
-    val tabList = listOf("По часам", "По дням")
-    val pagerState = rememberPagerState()
-    val tabIndex = pagerState.currentPage
-    val coroutineScope = rememberCoroutineScope()
 
-    Column(
-        modifier = Modifier
-            .padding(
-                start = 5.dp,
-                end = 5.dp
-            )
-            .clip(RoundedCornerShape(5.dp))
-    ) {
-        TabRow(
-            selectedTabIndex = tabIndex,
-            indicator = { pos ->
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, pos)
-                )
-            },
-            backgroundColor = Blue,
-            contentColor = Color.White
-        ) {
-            tabList.forEachIndexed{index, text ->
-                Tab(
-                    selected = false,
-                    onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(index)
+                HorizontalPager(
+                    count = 1,
+                    modifier = Modifier.weight(1.0f)
+                ) {
+                        index ->
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        itemsIndexed(
+                            dayslist.value
+                        ) { _, item ->
+                            ListItem(item, currentDay)
                         }
-                    },
-                    text = {
-                        Text(text = text)
                     }
-                )
-            }
-        }
-        HorizontalPager(
-            count = tabList.size,
-            state = pagerState,
-            modifier = Modifier.weight(1.0f)
-        ) {
-                index ->
 
+
+                }
+            }
         }
     }
 }
+//@Preview(showBackground = true)
+//@OptIn(ExperimentalPagerApi::class)
+//@Composable
+//fun TabLayout(){
+//    val tabList = listOf("По часам", "По дням")
+//    val pagerState = rememberPagerState()
+//    val tabIndex = pagerState.currentPage
+//    val coroutineScope = rememberCoroutineScope()
+//
+//    Column(
+//        modifier = Modifier
+//            .padding(
+//                start = 5.dp,
+//                end = 5.dp
+//            )
+//            .clip(RoundedCornerShape(5.dp))
+//    ) {
+//        TabRow(
+//            selectedTabIndex = tabIndex,
+//            indicator = { pos ->
+//                TabRowDefaults.Indicator(
+//                    Modifier.pagerTabIndicatorOffset(pagerState, pos)
+//                )
+//            },
+//            backgroundColor = Blue,
+//            contentColor = Color.White
+//        ) {
+//
+//            tabList.forEachIndexed{index, text ->
+//                Tab(
+//                    selected = false,
+//                    onClick = {
+//                        coroutineScope.launch {
+//                            pagerState.animateScrollToPage(index)
+//                        }
+//                    },
+//                    text = {
+//                        Text(text = text)
+//                    }
+//                )
+//            }
+//        }
+//
+//    }
+//}
