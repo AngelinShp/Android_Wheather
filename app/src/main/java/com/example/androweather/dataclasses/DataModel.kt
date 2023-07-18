@@ -1,4 +1,4 @@
-package com.example.androwheather.dataclasses
+package com.example.androweather.dataclasses
 
 data class DataModel (
         val city: String,

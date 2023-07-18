@@ -1,4 +1,4 @@
-package com.example.androwheather
+package com.example.androweather
 
 import android.content.Context
 import android.os.Bundle
@@ -18,9 +18,9 @@ import androidx.compose.ui.res.painterResource
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.androwheather.dataclasses.DataModel
+import com.example.androweather.dataclasses.DataModel
 
-import com.example.androwheather.ui.theme.AppForWheatherTheme
+import com.example.androweather.ui.theme.AppForWheatherTheme
 import org.json.JSONObject
 
 const val API_KEY = "d541c71a030e4f9e90a221843231707"

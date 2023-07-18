@@ -1,4 +1,4 @@
-package com.example.androwheather
+package com.example.androweather
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,8 +16,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.androwheather.dataclasses.DataModel
-import com.example.androwheather.ui.theme.Blue
+import com.example.androweather.dataclasses.DataModel
+import com.example.androweather.ui.theme.Blue
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 

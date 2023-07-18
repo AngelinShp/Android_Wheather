@@ -1,4 +1,4 @@
-package com.example.androwheather
+package com.example.androweather
 
 import org.junit.Test
 
