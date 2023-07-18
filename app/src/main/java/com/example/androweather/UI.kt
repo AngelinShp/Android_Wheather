@@ -25,18 +25,6 @@ import com.example.androweather.dataclasses.DataModel
 import com.example.androweather.ui.theme.Blue
 
 @Composable
-fun MainList(list: List<DataModel>, currentDay: MutableState<DataModel>) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        itemsIndexed(
-            list
-        ) { _, item ->
-            ListItem(item, currentDay)
-        }
-    }
-}
-@Composable
 fun ListItem(item: DataModel, currentDay: MutableState<DataModel>) {
     Card(
         modifier = Modifier

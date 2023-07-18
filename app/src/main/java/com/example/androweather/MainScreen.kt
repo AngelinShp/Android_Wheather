@@ -1,5 +1,6 @@
 package com.example.androweather
 
+import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -15,6 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import com.example.androweather.dataclasses.DataModel
 import com.example.androweather.ui.theme.Blue
@@ -29,6 +32,7 @@ fun MainCard(dayslist : MutableState<List<DataModel>>,
              onClickSync: () -> Unit,
              onClickSearch: () -> Unit
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,6 +82,7 @@ fun MainCard(dayslist : MutableState<List<DataModel>>,
                     }
                     IconButton(
                         onClick = {
+
                             onClickSync.invoke()
                         }
                     ) {
