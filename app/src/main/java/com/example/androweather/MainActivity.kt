@@ -125,6 +125,19 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun getLocation(){
+        val daysList = mutableStateOf(listOf<DataModel>())
+
+        val currentDay =  mutableStateOf(DataModel(
+                "",
+                "",
+                "0.0",
+                "",
+                "",
+                "0.0",
+                "0.0",
+                ""
+            )
+            )
 
         if(!isLocationEnabled()){return}
         val ct = CancellationTokenSource()
