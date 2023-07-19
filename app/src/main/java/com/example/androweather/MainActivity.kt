@@ -41,6 +41,7 @@ import com.example.androweather.ui.theme.AppForWheatherTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import org.json.JSONObject
 
@@ -57,30 +58,31 @@ class MainActivity : ComponentActivity() {
 
                 val daysList = remember {
                     mutableStateOf(listOf<DataModel>())
-            }
+                }
                 val dialogState = remember {
                     mutableStateOf(false)
                 }
-            val currentDay = remember {
-                mutableStateOf(DataModel(
-                    "",
-                    "",
-                    "0.0",
-                    "",
-                    "",
-                    "0.0",
-                    "0.0",
-                    ""
-                )
-                )
-            }
+                val currentDay = remember {
+                    mutableStateOf(
+                        DataModel(
+                            "",
+                            "",
+                            "0.0",
+                            "",
+                            "",
+                            "0.0",
+                            "0.0",
+                            ""
+                        )
+                    )
+                }
                 if (dialogState.value) {
                     DialogSearch(dialogState, onSubmit = {
                         getData(it, this, daysList, currentDay)
                     })
+                } else {
+                    getData("Saint-ersburg", this, daysList, currentDay)
                 }
-                else {
-                getData("Saint-Petersburg", this, daysList, currentDay)}
                 Image(
                     painter = painterResource(
                         id = R.drawable.background
@@ -91,7 +93,7 @@ class MainActivity : ComponentActivity() {
                         .alpha(0.5f),
                     contentScale = ContentScale.FillBounds
                 )
-                Column{
+                Column {
                     MainCard(daysList, currentDay, onClickSync = {
                         getData("Unknown", this@MainActivity, daysList, currentDay)
                     }, onClickSearch = {
@@ -99,35 +101,40 @@ class MainActivity : ComponentActivity() {
                     }
                     )
                 }
+
             }
+
         }
+
         permissionListener()
         checkPermission()
-    }
-    override fun onResume() {
-        super.onResume()
         checkLocation()
     }
-    private fun checkLocation(){
-        if(isLocationEnabled()){
+
+
+
+    private fun checkLocation() {
+        if (isLocationEnabled()) {
             getLocation()
         } else {
-            DialogManager.locationSettingsDialog(this, object : DialogManager.Listener{
+            DialogManager.locationSettingsDialog(this, object : DialogManager.Listener {
                 override fun onClick() {
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                 }
             })
         }
     }
-    private fun isLocationEnabled(): Boolean{
+
+    private fun isLocationEnabled(): Boolean {
         val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
-    private fun getLocation(){
+    private fun getLocation() {
         val daysList = mutableStateOf(listOf<DataModel>())
 
-        val currentDay =  mutableStateOf(DataModel(
+        val currentDay = mutableStateOf(
+            DataModel(
                 "",
                 "",
                 "0.0",
@@ -137,14 +144,16 @@ class MainActivity : ComponentActivity() {
                 "0.0",
                 ""
             )
-            )
+        )
 
-        if(!isLocationEnabled()){return}
+        if (!isLocationEnabled()) {
+            return
+        }
         val ct = CancellationTokenSource()
-        if (ActivityCompat.checkSelfPermission(
+        if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
@@ -153,34 +162,36 @@ class MainActivity : ComponentActivity() {
         }
         fLocationClient
             .getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, ct.token)
-            .addOnCompleteListener{
+            .addOnCompleteListener {
                 getData("${it.result.latitude},${it.result.longitude}", this, daysList, currentDay)
             }
     }
-    fun isPermissionGranted(p: String): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this, p) == PackageManager.PERMISSION_GRANTED
-    }
-    private fun checkPermission(){
-        if(!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)){
-            permissionListener()
+
+
+
+    private fun checkPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED ){
             pLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
-    private fun permissionListener(){
+
+    private fun permissionListener() {
         fLocationClient = LocationServices.getFusedLocationProviderClient(this)
         pLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()) {
-        if(it){
-            Toast.makeText(this, "Permission granted!", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this, "Permission denied!", Toast.LENGTH_LONG).show()
+            ActivityResultContracts.RequestPermission()
+        ) {
+            if (it) {
+                Toast.makeText(this, "Permission granted!", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Permission denied!", Toast.LENGTH_LONG).show()
 
+            }
         }
     }
-  }
-
 }
+
+
 private fun getData(    city: String, context: Context,
                         daysList: MutableState<List<DataModel>>,
                         currentDay: MutableState<DataModel>){
